@@ -1,1 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEO MDZ YT CONVERTER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --surface-soft: #f0f1f8;
+    --border: #e6e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --primary: #6c5ce7;
+    --primary-dark: #5a4bd4;
+    --violet: #8b5cf6;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --success: #00b38a;
+    --shadow: 0 10px 30px rgba(108, 92, 231, .10);
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .container { width: 100%; max-width: 780px; padding: 0 16px 60px; }
 
+  .top-strip {
+    width: 100%;
+    background: linear-gradient(90deg, #6c5ce7, #8b5cf6 50%, #6c5ce7);
+    text-align: center;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .top-strip b { font-weight: 900; }
+
+  .header { text-align: center; padding: 38px 0 8px; }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 9px 22px;
+    box-shadow: 0 4px 14px rgba(108,92,231,.12);
+  }
+  .logo .play {
+    width: 0; height: 0;
+    border-left: 15px solid var(--primary);
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+  }
+  .logo h1 { font-size: 20px; font-weight: 900; letter-spacing: 1.5px; }
+  .logo h1 span {
+    background: linear-gradient(90deg, var(--primary), var(--violet));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .header h2 {
+    margin-top: 22px;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -.5px;
+    line-height: 1.2;
+  }
+  .header h2 span {
+    background: linear-gradient(90deg, var(--primary), var(--violet));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .header p { color: var(--muted); margin-top: 12px; font-size: 15px; font-weight: 500; }
+  .badges { display: flex; justify-content: center; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 13px;
+    border-radius: 999px;
+  }
+  .badge b { color: var(--primary); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px;
+    margin-top: 22px;
+    box-shadow: var(--shadow);
+  }
+  .card h3 {
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .card h3 em { font-style: normal; color: var(--primary); }
+
+  .format-selector { display: flex; gap: 12px; margin-bottom: 18px; }
+  .format-option {
+    flex: 1;
+    text-align: center;
+    background: var(--surface-soft);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 10px;
+    cursor: pointer;
+    transition: all .18s;
+    user-select: none;
+  }
+  .format-option .f-icon { font-size: 26px; display: block; margin-bottom: 6px; }
+  .format-option .f-name { font-weight: 800; font-size: 15px; letter-spacing: 1px; }
+  .format-option .f-desc { display: block; font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+  .format-option.active {
+    border-color: var(--primary);
+    background: linear-gradient(180deg, #f4f2ff, #ffffff);
+    box-shadow: 0 8px 20px rgba(108,92,231,.18);
+  }
+  .format-option.active .f-name { color: var(--primary); }
+
+  .download-row { display: flex; gap: 10px; }
+  .download-row input {
+    flex: 1;
+    background: var(--surface-soft);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    outline: none;
+    transition: border .2s, box-shadow .2s;
+  }
+  .download-row input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(108,92,231,.12); }
+  .download-row input::placeholder { color: #9aa3b5; }
+  .btn {
+    background: linear-gradient(90deg, var(--primary), var(--violet));
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 15px;
+    font-family: inherit;
+    padding: 14px 26px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s, filter .15s;
+    white-space: nowrap;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(108,92,231,.35); filter: brightness(1.05); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  #statusArea { display: none; margin-top: 20px; }
+  .status-line { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 4px solid #e6e8f0;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .status-text { font-size: 15px; font-weight: 700; }
+  .status-text small { display: block; color: var(--muted); font-size: 12px; font-weight: 500; margin-top: 3px; word-break: break-all; }
+
+  .progress-wrap {
+    height: 10px;
+    background: var(--surface-soft);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--violet));
+    transition: width .4s;
+    border-radius: 999px;
+  }
+  .error-text { color: var(--danger); font-size: 13px; font-weight: 600; margin-top: 10px; word-break: break-word; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 4px; }
+  .step {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+  }
+  .step .s-icon { font-size: 30px; display: block; margin-bottom: 8px; }
+  .step .s-num {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--primary), var(--violet));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+  }
+  .step .s-title { font-weight: 800; font-size: 13px; margin-bottom: 4px; }
+  .step .s-desc { font-size: 12px; color: var(--muted); font-weight: 500; line-height: 1.45; }
+
+  .footer {
+    margin-top: 34px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .footer b {
+    background: linear-gradient(90deg, var(--primary), var(--violet));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900;
+  }
+
+  @media (max-width: 560px) {
+    .download-row { flex-direction: column; }
+    .steps { grid-template-columns: 1fr; }
+    .header h2 { font-size: 24px; }
+    .logo h1 { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 🎬 Faixa do criador no topo -->
+<div class="top-strip">🎬 Criador <b>@LEO MODZ</b> 🎬</div>
+
+<div class="container">
+
+  <!-- Cabeçalho -->
+  <div class="header">
+    <div class="logo">
+      <div class="play"></div>
+      <h1>LEO MDZ <span>YT CONVERTER</span></h1>
+    </div>
+    <h2>Converta vídeos do YouTube<br>para <span>MP3</span> e <span>MP4</span> 🎵🎬</h2>
+    <p>Cole o link, escolha o formato e baixe grátis — sem cadastro, sem limites.</p>
+    <div class="badges">
+      <span class="badge">⚡ <b>Rápido</b></span>
+      <span class="badge">🎵 <b>MP3 192kbps</b></span>
+      <span class="badge">🎬 <b>MP4 HD</b></span>
+      <span class="badge">🆓 <b>100% Grátis</b></span>
+    </div>
+  </div>
+
+  <!-- Cartão de conversão -->
+  <div class="card">
+    <h3>⬇️ Converter <em>e baixar</em></h3>
+
+    <div class="format-selector">
+      <div class="format-option active" id="optMp3" onclick="selecionarFormato('mp3')">
+        <span class="f-icon">🎵</span>
+        <span class="f-name">MP3</span>
+        <span class="f-desc">Áudio</span>
+      </div>
+      <div class="format-option" id="optMp4" onclick="selecionarFormato('mp4')">
+        <span class="f-icon">🎬</span>
+        <span class="f-name">MP4</span>
+        <span class="f-desc">Vídeo</span>
+      </div>
+    </div>
+
+    <div class="download-row">
+      <input type="url" id="urlInput" placeholder="Cole aqui a URL do vídeo do YouTube..." autocomplete="off">
+      <button class="btn" id="btnDownload" onclick="iniciarDownload()">⚡ Converter</button>
+    </div>
+
+    <div id="statusArea">
+      <div class="status-line">
+        <div class="spinner" id="spinner"></div>
+        <div class="status-text" id="statusText">Aguardando...</div>
+      </div>
+      <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="error-text" id="errorText" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Como funciona -->
+  <div class="card">
+    <h3>🧭 Como <em>funciona</em></h3>
+    <div class="steps">
+      <div class="step">
+        <span class="s-icon">📋</span>
+        <span class="s-num">Passo 1</span>
+        <div class="s-title">Copie o link</div>
+        <div class="s-desc">Copie a URL do vídeo na barra de endereços ou no botão Compartilhar do YouTube.</div>
+      </div>
+      <div class="step">
+        <span class="s-icon">🎚️</span>
+        <span class="s-num">Passo 2</span>
+        <div class="s-title">Escolha o formato</div>
+        <div class="s-desc">Selecione MP3 para áudio ou MP4 para vídeo e cole o link acima.</div>
+      </div>
+      <div class="step">
+        <span class="s-icon">⬇️</span>
+        <span class="s-num">Passo 3</span>
+        <div class="s-title">Baixe o arquivo</div>
+        <div class="s-desc">Clique em Converter e o arquivo salva direto no seu dispositivo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <div class="footer">
+    <b>LEO MDZ YT CONVERTER</b> • Criado por <b>@LEO MODZ</b> • Grátis e sem limites 🚀
+  </div>
+
+</div>
+
+<script>
+  let formatoSelecionado = 'mp3';
+
+  function selecionarFormato(fmt) {
+    formatoSelecionado = fmt;
+    document.getElementById('optMp3').classList.toggle('active', fmt === 'mp3');
+    document.getElementById('optMp4').classList.toggle('active', fmt === 'mp4');
+  }
+
+  function urlValida(url) {
+    return /(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)/.test(url);
+  }
+
+  // Extrai o nome do arquivo do header Content-Disposition
+  function nomeDoArquivo(cd, fallback) {
+    if (!cd) return fallback;
+    const star = cd.match(/filename\*=UTF-8''([^;]+)/i);
+    if (star) { try { return decodeURIComponent(star[1]); } catch (e) {} }
+    const plain = cd.match(/filename="?([^";]+)"?/i);
+    if (plain) return plain[1];
+    return fallback;
+  }
+
+  async function iniciarDownload() {
+    const url = document.getElementById('urlInput').value.trim();
+    if (!url) { alert('⚠️ Cole a URL do vídeo primeiro!'); return; }
+    if (!urlValida(url)) { alert('⚠️ Essa URL não parece ser do YouTube.'); return; }
+
+    const btn = document.getElementById('btnDownload');
+    btn.disabled = true;
+    btn.textContent = '⏳ Convertendo...';
+
+    const area = document.getElementById('statusArea');
+    area.style.display = 'block';
+    document.getElementById('statusText').innerHTML =
+      '⬇️ Baixando e convertendo para ' + formatoSelecionado.toUpperCase() +
+      '...<small>Isso pode levar alguns segundos</small>';
+    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('progressBar').style.width = '40%';
+    document.getElementById('errorText').style.display = 'none';
+
+    try {
+      const resp = await fetch('/download?url=' + encodeURIComponent(url) +
+                                '&formato=' + formatoSelecionado);
+
+      if (!resp.ok) {
+        let msg = 'Erro ' + resp.status;
+        try {
+          const j = await resp.json();
+          msg = j.detail || msg;
+        } catch (e) {}
+        throw new Error(msg);
+      }
+
+      const nome = nomeDoArquivo(
+        resp.headers.get('Content-Disposition'),
+        'video.' + formatoSelecionado
+      );
+
+      const blob = await resp.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = nome;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+
+      document.getElementById('spinner').style.display = 'none';
+      document.getElementById('progressBar').style.width = '100%';
+      document.getElementById('statusText').innerHTML =
+        '✅ ' + formatoSelecionado.toUpperCase() + ' baixado!<small>' + nome + '</small>';
+    } catch (e) {
+      const err = document.getElementById('errorText');
+      err.textContent = '❌ ' + e.message;
+      err.style.display = 'block';
+      document.getElementById('spinner').style.display = 'none';
+      document.getElementById('progressBar').style.width = '0%';
+      document.getElementById('statusText').innerHTML = 'Falha na conversão';
+    }
+
+    btn.disabled = false;
+    btn.textContent = '⚡ Converter';
+  }
+
+  document.getElementById('urlInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') iniciarDownload();
+  });
+</script>
+
+</body>
+</html>
